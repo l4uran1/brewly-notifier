@@ -34,7 +34,7 @@ export function orderConfirmation(event: OrderCreated): Email {
       "Thanks for your order!",
       "",
       `Order: ${shortId}`,
-      `Total: ${formatMoney(event.totalCents, "EUR")}`,
+      `Total: ${formatMoney(event.totalCents, event.currency ?? "EUR")}`,
       "",
       "We'll let you know when your coffee is on its way.",
     ].join("\n"),
