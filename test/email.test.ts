@@ -27,3 +27,12 @@ test("orderConfirmation is addressed to the customer with the short order id", (
 test("orderConfirmation shows the order total", () => {
   assert.match(orderConfirmation(event).body, /Total: €29\.99/);
 });
+
+test("orderConfirmation shows the total in the order's currency", () => {
+  const email = orderConfirmation({ ...event, totalCents: 2500, currency: "GBP", eurExchangeRate: 1.17 });
+  assert.match(email.body, /Total: £25\.00/);
+});
+
+test("an event published before currencies existed is shown in euros", () => {
+  assert.match(orderConfirmation({ ...event, currency: undefined }).body, /Total: €29\.99/);
+});
