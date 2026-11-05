@@ -10,8 +10,12 @@ const event = {
 };
 
 test("formatMoney formats cents as euros", () => {
-  assert.equal(formatMoney(2999), "€29.99");
-  assert.equal(formatMoney(500), "€5.00");
+  assert.equal(formatMoney(2999, "EUR"), "€29.99");
+  assert.equal(formatMoney(500, "EUR"), "€5.00");
+});
+
+test("formatMoney uses the pound sign for GBP", () => {
+  assert.equal(formatMoney(2500, "GBP"), "£25.00");
 });
 
 test("orderConfirmation is addressed to the customer with the short order id", () => {
