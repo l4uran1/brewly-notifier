@@ -10,8 +10,12 @@ const event = {
 };
 
 test("formatMoney formats cents as euros", () => {
-  assert.equal(formatMoney(2999), "€29.99");
-  assert.equal(formatMoney(500), "€5.00");
+  assert.equal(formatMoney(2999, "EUR"), "€29.99");
+  assert.equal(formatMoney(500, "EUR"), "€5.00");
+});
+
+test("formatMoney uses the pound sign for GBP", () => {
+  assert.equal(formatMoney(2500, "GBP"), "£25.00");
 });
 
 test("orderConfirmation is addressed to the customer with the short order id", () => {
@@ -22,4 +26,13 @@ test("orderConfirmation is addressed to the customer with the short order id", (
 
 test("orderConfirmation shows the order total", () => {
   assert.match(orderConfirmation(event).body, /Total: €29\.99/);
+});
+
+test("orderConfirmation shows the total in the order's currency", () => {
+  const email = orderConfirmation({ ...event, totalCents: 2500, currency: "GBP", eurExchangeRate: 1.17 });
+  assert.match(email.body, /Total: £25\.00/);
+});
+
+test("an event published before currencies existed is shown in euros", () => {
+  assert.match(orderConfirmation({ ...event, currency: undefined }).body, /Total: €29\.99/);
 });
